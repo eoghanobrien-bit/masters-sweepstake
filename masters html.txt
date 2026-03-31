@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Masters 2026 Friends Pool</title>
+  <!-- Fontshare: Satoshi (body), Boska (display) -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&f[]=boska@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    /* Design tokens (trimmed to essentials for this mini-app) */
+    :root, [data-theme="light"] {
+      --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+      --space-12: 3rem; --space-16: 4rem;
+
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-surface-offset: #f3f0ec;
+      --color-border: #d4d1ca;
+      --color-text: #28251d;
+      --color-text-muted: #7a7974;
+      --color-text-faint: #bab9b4;
+      --color-text-inverse: #f9f8f4;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-active: #0f3638;
+      --color-error: #a12c7b;
+      --color-success: #437a22;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+
+      --content-default: 960px;
+
+      --font-body: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-display: 'Boska', 'Georgia', serif;
+
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1c1b19;
+      --color-surface-2: #201f1d;
+      --color-surface-offset: #22211f;
+      --color-border: #393836;
+      --color-text: #cdccca;
+      --color-text-muted: #797876;
+      --color-text-faint: #5a5957;
+      --color-text-inverse: #2b2a28;
+      --color-primary: #4f98a3;
+      --color-primary-hover: #227f8b;
+      --color-primary-active: #1a626b;
+      --color-error: #d163a7;
+      --color-success: #6daa45;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--space-16);
+    }
+    body {
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+    img, svg { max-width: 100%; display: block; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    input, select { font: inherit; color: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    .app-shell {
+      max-width: var(--content-default);
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-10);
+      width: 100%;
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 30%, #fdfdf9, #e2ddcf);
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      color: var(--color-primary);
+    }
+    .logo-wordmark {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      letter-spacing: 0.04em;
+    }
+    .logo-subtitle {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--color-text-muted);
+    }
+
+    .theme-toggle-btn {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+      transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .theme-toggle-btn:hover {
+      background: var(--color-surface-2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .nav-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--space-2);
+      padding: 0.15rem;
+      border-radius: var(--radius-full);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-6);
+      overflow-x: auto;
+    }
+    .nav-tab {
+      flex: 1 1 auto;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      text-align: center;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+      transition: background var(--transition-interactive), color var(--transition-interactive), box-shadow var(--transition-interactive);
+    }
+    .nav-tab[data-active="true"] {
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      box-shadow: var(--shadow-md);
+    }
+
+    main {
+      display: grid;
+      gap: var(--space-6);
+    }
+
+    section.page {
+      display: none;
+    }
+    section.page[data-active="true"] {
+      display: block;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-5);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .card-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+    .card-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    form.entry-form {
+      display: grid;
+      gap: var(--space-4);
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .field-group-inline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+    }
+    label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    input[type="text"], select {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: 0.55rem 0.7rem;
+      background: var(--color-surface-2);
+      transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive), background var(--transition-interactive);
+    }
+    input[type="text"]:focus-visible, select:focus-visible {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 1px var(--color-primary);
+      background: var(--color-surface-offset);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      box-shadow: var(--shadow-sm);
+      transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      background: var(--color-primary-active);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(0);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .btn-secondary:hover {
+      background: var(--color-surface-offset);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .helper-text {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .helper-text-strong {
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.1rem 0.55rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      background: var(--color-surface-offset);
+      color: var(--color-text-muted);
+    }
+    .badge-success {
+      background: rgba(67,122,34,0.09);
+      color: var(--color-success);
+    }
+
+    .status-message {
+      margin-top: var(--space-3);
+      font-size: var(--text-sm);
+    }
+    .status-message[data-variant="error"] { color: var(--color-error); }
+    .status-message[data-variant="success"] { color: var(--color-success); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    thead {
+      background: var(--color-surface-offset);
+    }
+    th, td {
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px solid var(--color-border);
+      text-align: left;
+      white-space: nowrap;
+    }
+    th { font-weight: 500; font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); }
+    tbody tr:nth-child(even) { background: var(--color-surface-2); }
+    tbody tr.leader-row { background: rgba(1,105,111,0.08); }
+    .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .table-wrapper {
+      margin-top: var(--space-3);
+      border-radius: var(--radius-md);
+      overflow: auto;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .kpi-card {
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.15rem;
+    }
+    .kpi-value {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.25rem;
+    }
+    .pill {
+      padding: 0.15rem 0.55rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      background: var(--color-surface-offset);
+      color: var(--color-text-muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .muted {
+      color: var(--color-text-muted);
+    }
+
+    .admin-grid {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .code-inline {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      font-size: var(--text-xs);
+      background: var(--color-surface-2);
+      border-radius: var(--radius-sm);
+      padding: 0.1rem 0.35rem;
+    }
+
+    @media (max-width: 720px) {
+      header.app-header { align-items: flex-start; }
+      .card {
+        padding: var(--space-4);
+      }
+      .field-group-inline {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-group">
+        <div class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-label="Augusta green" width="26" height="26">
+            <rect x="3" y="8" width="26" height="16" rx="7" fill="#0b5b34" />
+            <circle cx="12" cy="16" r="4" fill="#f5e6b5" />
+            <path d="M19 11c1.8 0 3.5.8 4.6 2.2" stroke="#f5e6b5" stroke-width="1.4" stroke-linecap="round" fill="none" />
+            <path d="M19 21c1.8 0 3.5-.8 4.6-2.2" stroke="#f5e6b5" stroke-width="1.4" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+        <div class="logo-wordmark">
+          <div class="logo-title">Masters 2026 Pool</div>
+          <div class="logo-subtitle">Friends sweepstake &bull; 3-golfer teams</div>
+        </div>
+      </div>
+      <button class="theme-toggle-btn" type="button" data-theme-toggle aria-label="Toggle dark mode"></button>
+    </header>
+
+    <nav class="nav-tabs" aria-label="Main navigation">
+      <button class="nav-tab" type="button" data-page="entry" data-active="true">Enter team</button>
+      <button class="nav-tab" type="button" data-page="leaderboard">Leaderboard</button>
+      <button class="nav-tab" type="button" data-page="dashboard">Dashboard</button>
+      <button class="nav-tab" type="button" data-page="admin">Admin</button>
+    </nav>
+
+    <main>
+      <!-- Entry page -->
+      <section id="page-entry" class="page" data-active="true" aria-labelledby="entry-heading">
+        <div class="card">
+          <div class="card-header">
+            <h2 id="entry-heading" class="card-title">Submit your 3-golfer team</h2>
+            <div class="card-meta">Entries stored securely in Google Sheets</div>
+          </div>
+
+          <form class="entry-form" id="entry-form">
+            <div class="field-group">
+              <label for="entrant-name">Your name</label>
+              <input id="entrant-name" name="entrantName" type="text" autocomplete="name" required placeholder="e.g. Eoghan" />
+              <p class="helper-text">This will appear on the public leaderboard and dashboard.</p>
+            </div>
+
+            <div class="field-group">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:0.75rem;flex-wrap:wrap;">
+                <label>Pick exactly 3 golfers</label>
+                <span class="helper-text">Each golfer can appear on multiple teams, but a 3-golfer combination can only be used once.</span>
+              </div>
+              <div class="field-group-inline">
+                <div class="field-group">
+                  <label for="pick-1">Golfer 1</label>
+                  <select id="pick-1" required></select>
+                </div>
+                <div class="field-group">
+                  <label for="pick-2">Golfer 2</label>
+                  <select id="pick-2" required></select>
+                </div>
+                <div class="field-group">
+                  <label for="pick-3">Golfer 3</label>
+                  <select id="pick-3" required></select>
+                </div>
+              </div>
+              <p class="helper-text">Selections are limited to the official 2026 Masters field loaded from the odds sheet.</p>
+            </div>
+
+            <div class="field-group stack">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                <div>
+                  <div class="helper-text">Combined odds constraint (fractional odds numerators summed):</div>
+                  <div class="helper-text-strong" id="combined-odds-display">Combined odds: &ndash;&nbsp;/1 &mdash; must be at least 150/1</div>
+                </div>
+                <span class="badge">Rule: sum of your three odds must be 
+                  <span class="helper-text-strong" style="margin-left:0.25rem;">&ge; 150/1</span>
+                </span>
+              </div>
+              <p class="helper-text">Odds are fixed from a static Paddy Power snapshot taken when this app was built. Later market moves do not change eligibility.</p>
+            </div>
+
+            <div class="field-group">
+              <button type="submit" class="btn-primary">
+                <span>Submit team</span>
+              </button>
+              <p id="entry-status" class="status-message" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Leaderboard page -->
+      <section id="page-leaderboard" class="page" aria-labelledby="leaderboard-heading">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 id="leaderboard-heading" class="card-title">Live sweepstake leaderboard</h2>
+              <p class="helper-text">Teams are ranked by combined score to par across all three golfers. Lower is better.</p>
+            </div>
+            <div class="stack" style="align-items:flex-end;">
+              <div class="card-meta">Last updated: <span id="last-updated">&ndash;</span></div>
+              <span id="current-round-label" class="badge"></span>
+            </div>
+          </div>
+
+          <div class="table-wrapper" aria-live="polite">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Entrant</th>
+                  <th scope="col">Golfer 1</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Golfer 2</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Golfer 3</th>
+                  <th scope="col">Score</th>
+                  <th scope="col" class="numeric">Team total</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <tr><td colspan="9" class="muted">Loading leaderboard&hellip;</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="helper-text" style="margin-top:var(--space-3);">Tie-breaks are resolved by the lowest individual golfer score, then entrant name A&ndash;Z.</p>
+        </div>
+      </section>
+
+      <!-- Dashboard page -->
+      <section id="page-dashboard" class="page" aria-labelledby="dashboard-heading">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 id="dashboard-heading" class="card-title">Pool dashboard</h2>
+              <p class="helper-text">Overview of entries, pot size, and everyone&apos;s picks.</p>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">Entrants</div>
+              <div class="kpi-value" id="kpi-entrants">&ndash;</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Total pot (&euro;10 per entry)</div>
+              <div class="kpi-value" id="kpi-pot">&ndash;</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Most-picked golfer</div>
+              <div class="kpi-value" id="kpi-most-picked">&ndash;</div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div>
+              <h3 class="helper-text" style="font-size:var(--text-sm);margin-bottom:0.25rem;">All entries &amp; teams</h3>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Entrant</th>
+                      <th scope="col">Team</th>
+                      <th scope="col" class="numeric">Combined odds</th>
+                    </tr>
+                  </thead>
+                  <tbody id="picks-body">
+                    <tr><td colspan="3" class="muted">Loading entries&hellip;</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="helper-text" style="font-size:var(--text-sm);margin-bottom:0.25rem;">Leaders after each round</h3>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Round</th>
+                      <th scope="col">Leader</th>
+                      <th scope="col" class="numeric">Team total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="round-leaders-body">
+                    <tr><td colspan="3" class="muted">Will populate once scores are loaded.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin page -->
+      <section id="page-admin" class="page" aria-labelledby="admin-heading">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 id="admin-heading" class="card-title">Admin controls</h2>
+              <p class="helper-text">Restricted to the organiser. Use this to refresh scores from the Google Sheet.</p>
+            </div>
+          </div>
+
+          <div class="admin-grid">
+            <div class="field-group">
+              <label for="admin-key">Admin key</label>
+              <input id="admin-key" type="password" autocomplete="off" placeholder="Enter admin key" />
+              <p class="helper-text">This must match the key configured in the Google Apps Script backend. It is not visible to other users.</p>
+            </div>
+
+            <div class="stack">
+              <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+                <button type="button" class="btn-secondary" id="btn-refresh-scores">Refresh scores from sheet</button>
+                <button type="button" class="btn-secondary" id="btn-reload-all">Reload data in app</button>
+              </div>
+              <p class="helper-text">Workflow on each update: paste the latest Masters leaderboard table into the <span class="code-inline">RawLeaderboard</span> tab in your Google Sheet, then click 
+                <span class="code-inline">Refresh scores from sheet</span>. The backend will parse scores, update the <span class="code-inline">Scores</span> tab, and timestamp the refresh.
+              </p>
+              <p id="admin-status" class="status-message" aria-live="polite"></p>
+            </div>
+
+            <details class="stack">
+              <summary class="helper-text" style="cursor:pointer;">Setup notes (for the organiser)</summary>
+              <div class="stack">
+                <p class="helper-text">
+                  1. Create a Google Sheet with tabs named <span class="code-inline">Field</span>, <span class="code-inline">Entries</span>, <span class="code-inline">Scores</span>, <span class="code-inline">RawLeaderboard</span>, and <span class="code-inline">Meta</span>.
+                </p>
+                <p class="helper-text">
+                  2. Paste the official Masters field and fractional odds snapshot from Paddy Power into <span class="code-inline">Field</span> (columns: Golfer name, Odds numerator).
+                </p>
+                <p class="helper-text">
+                  3. Add the provided Google Apps Script backend to the Sheet, deploy as a web app, and paste the deployment URL into the <span class="code-inline">API_BASE_URL</span> constant in this HTML.
+                </p>
+                <p class="helper-text">
+                  After that, everything (entries, validation, leaderboard, dashboard, score refresh) is driven via this UI and the Sheet; no further coding required.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ---- Configuration ----
+    // Replace this with your deployed Google Apps Script web app URL (without query params).
+    const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzUy-DrsFch6j3-cZuks9is7lBU8WsIqZHz7npmJ52hlGtSacNQ5yia4fdSvXOV0pxj/exec';
+
+    const ENTRY_FEE_EUR = 10; // used client-side for pot size display only
+    const MIN_COMBINED_ODDS = 150; // sum of fractional odds numerators must be >= this
+
+    // In-memory cache of data from backend
+    const appState = {
+      field: [],        // [{ name, odds }]
+      entries: [],      // [{ entrantName, golfers:[{name, scoreToPar}], combinedScoreToPar, combinedOdds, roundLeaders }]
+      meta: {
+        lastUpdated: null,
+        currentRound: null
+      }
+    };
+
+    // ---- Theme toggle ----
+    (function initThemeToggle(){
+      const btn = document.querySelector('[data-theme-toggle]');
+      if (!btn) return;
+      const root = document.documentElement;
+      let current = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      function renderIcon() {
+        if (current === 'dark') {
+          btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+          btn.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+          btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+          btn.setAttribute('aria-label', 'Switch to dark mode');
+        }
+      }
+      root.setAttribute('data-theme', current);
+      renderIcon();
+      btn.addEventListener('click', () => {
+        current = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', current);
+        renderIcon();
+      });
+    })();
+
+    // ---- Navigation ----
+    (function initNavigation(){
+      const tabs = document.querySelectorAll('.nav-tab');
+      const pages = document.querySelectorAll('section.page');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-page');
+          tabs.forEach(t => t.setAttribute('data-active', t === tab ? 'true' : 'false'));
+          pages.forEach(page => {
+            page.setAttribute('data-active', page.id === 'page-' + target ? 'true' : 'false');
+          });
+        });
+      });
+    })();
+
+    // ---- API helpers ----
+    async function apiGet(params) {
+      const url = new URL(API_BASE_URL);
+      Object.entries(params || {}).forEach(([k,v]) => url.searchParams.append(k, v));
+      const res = await fetch(url.toString(), { method: 'GET' });
+      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      return res.json();
+    }
+
+    async function apiPost(params, body) {
+      const url = new URL(API_BASE_URL);
+      Object.entries(params || {}).forEach(([k,v]) => url.searchParams.append(k, v));
+      const res = await fetch(url.toString(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body || {})
+      });
+      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      return res.json();
+    }
+
+    // ---- Entry form + field loading ----
+    const pickSelects = [
+      document.getElementById('pick-1'),
+      document.getElementById('pick-2'),
+      document.getElementById('pick-3')
+    ];
+
+    function renderFieldOptions() {
+      pickSelects.forEach(select => {
+        select.innerHTML = '';
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Select golfer';
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        select.appendChild(placeholder);
+        appState.field.forEach(player => {
+          const opt = document.createElement('option');
+          opt.value = player.name;
+          opt.textContent = player.name + ' (' + player.odds + '/1)';
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function computeCombinedOdds() {
+      const chosenNames = pickSelects
+        .map(s => s.value)
+        .filter(Boolean);
+      if (chosenNames.length !== 3) return null;
+      let sum = 0;
+      for (const name of chosenNames) {
+        const player = appState.field.find(p => p.name === name);
+        if (!player) return null;
+        sum += Number(player.odds) || 0;
+      }
+      return sum;
+    }
+
+    function updateCombinedOddsDisplay() {
+      const el = document.getElementById('combined-odds-display');
+      const sum = computeCombinedOdds();
+      if (sum == null) {
+        el.textContent = 'Combined odds: \\u2013 /1 \\u2014 must be at least ' + MIN_COMBINED_ODDS + '/1';
+        return;
+      }
+      const ok = sum >= MIN_COMBINED_ODDS;
+      el.textContent = 'Combined odds: ' + sum + '/1 \\u2014 ' + (ok ? 'valid (meets the ' + MIN_COMBINED_ODDS + '/1 minimum)' : 'too short; pick longer-odds golfers');
+      el.style.color = ok ? 'var(--color-success)' : 'var(--color-error)';
+    }
+
+    pickSelects.forEach(select => {
+      select.addEventListener('change', () => {
+        // prevent duplicate golfer selections client-side
+        const chosen = new Set();
+        pickSelects.forEach(s => {
+          if (!s.value) return;
+          if (chosen.has(s.value)) {
+            s.value = '';
+          } else {
+            chosen.add(s.value);
+          }
+        });
+        updateCombinedOddsDisplay();
+      });
+    });
+
+    async function submitEntry(event) {
+      event.preventDefault();
+      const statusEl = document.getElementById('entry-status');
+      statusEl.textContent = '';
+      statusEl.removeAttribute('data-variant');
+      const nameInput = document.getElementById('entrant-name');
+      const entrantName = (nameInput.value || '').trim();
+      if (!entrantName) {
+        statusEl.textContent = 'Please enter your name.';
+        statusEl.setAttribute('data-variant', 'error');
+        return;
+      }
+      const picks = pickSelects.map(s => s.value).filter(Boolean);
+      if (picks.length !== 3) {
+        statusEl.textContent = 'Please choose exactly three different golfers.';
+        statusEl.setAttribute('data-variant', 'error');
+        return;
+      }
+      const combined = computeCombinedOdds();
+      if (combined == null || combined < MIN_COMBINED_ODDS) {
+        statusEl.textContent = 'Combined odds must be at least ' + MIN_COMBINED_ODDS + '/1. Try a riskier combination.';
+        statusEl.setAttribute('data-variant', 'error');
+        return;
+      }
+      try {
+        statusEl.textContent = 'Submitting your team&hellip;';
+        const res = await apiPost({ action: 'submit' }, {
+          entrantName,
+          picks
+        });
+        if (!res || !res.ok) {
+          const code = res && res.code;
+          let message = 'Entry could not be saved. Please try again.';
+          if (code === 'DUPLICATE_TEAM') {
+            message = 'That exact 3-golfer combination is already taken. Please tweak one of your picks and resubmit.';
+          } else if (code === 'ODDS_TOO_SHORT') {
+            message = 'Combined odds too short. Your three golfers must sum to at least ' + MIN_COMBINED_ODDS + '/1.';
+          } else if (code === 'INVALID_GOLFER') {
+            message = 'One of your golfers is not in the official field snapshot.';
+          }
+          statusEl.textContent = message;
+          statusEl.setAttribute('data-variant', 'error');
+          return;
+        }
+        statusEl.textContent = 'Team submitted successfully. You\'ll appear on the leaderboard after the next refresh.';
+        statusEl.setAttribute('data-variant', 'success');
+        // Refresh local data so dashboard/leaderboard include this entry
+        await loadLeaderboardAndDashboard();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Unexpected error submitting your team. Please try again in a moment.';
+        statusEl.setAttribute('data-variant', 'error');
+      }
+    }
+
+    document.getElementById('entry-form').addEventListener('submit', submitEntry);
+
+    // ---- Leaderboard & dashboard rendering ----
+    function formatToPar(value) {
+      if (value === null || value === undefined || isNaN(value)) return '\\u2013';
+      if (value === 0) return 'E';
+      if (value > 0) return '+' + value;
+      return String(value);
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById('leaderboard-body');
+      tbody.innerHTML = '';
+      if (!appState.entries.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 9;
+        cell.className = 'muted';
+        cell.textContent = 'No entries yet.';
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+      }
+      appState.entries
+        .slice()
+        .sort((a, b) => {
+          if (a.combinedScoreToPar !== b.combinedScoreToPar) return a.combinedScoreToPar - b.combinedScoreToPar;
+          const aBest = Math.min(...a.golfers.map(g => g.scoreToPar));
+          const bBest = Math.min(...b.golfers.map(g => g.scoreToPar));
+          if (aBest !== bBest) return aBest - bBest;
+          return a.entrantName.localeCompare(b.entrantName);
+        })
+        .forEach((entry, idx) => {
+          const tr = document.createElement('tr');
+          if (idx === 0) tr.classList.add('leader-row');
+          const cells = [];
+          cells.push(String(idx + 1));
+          cells.push(entry.entrantName);
+          entry.golfers.forEach(g => {
+            cells.push(g.name);
+            cells.push(formatToPar(g.scoreToPar));
+          });
+          while (cells.length < 9) cells.push('');
+          cells.forEach((val, i) => {
+            const td = document.createElement('td');
+            td.textContent = val;
+            if (i === 8) td.classList.add('numeric');
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+      const lastUpdatedEl = document.getElementById('last-updated');
+      if (appState.meta.lastUpdated) {
+        const dt = new Date(appState.meta.lastUpdated);
+        lastUpdatedEl.textContent = dt.toLocaleString();
+      } else {
+        lastUpdatedEl.textContent = '\\u2013';
+      }
+
+      const roundLabel = document.getElementById('current-round-label');
+      if (appState.meta.currentRound) {
+        roundLabel.textContent = 'After round ' + appState.meta.currentRound;
+      } else {
+        roundLabel.textContent = 'Tournament not yet started';
+      }
+    }
+
+    function renderDashboard() {
+      const entrantsCount = appState.entries.length;
+      document.getElementById('kpi-entrants').textContent = entrantsCount ? String(entrantsCount) : '\\u2013';
+      document.getElementById('kpi-pot').textContent = entrantsCount ? '\\u20ac' + (entrantsCount * ENTRY_FEE_EUR).toString() : '\\u2013';
+
+      // Most-picked golfer
+      const counts = new Map();
+      appState.entries.forEach(entry => {
+        entry.golfers.forEach(g => {
+          counts.set(g.name, (counts.get(g.name) || 0) + 1);
+        });
+      });
+      let topGolfer = null;
+      let topCount = 0;
+      counts.forEach((count, name) => {
+        if (count > topCount) { topCount = count; topGolfer = name; }
+      });
+      document.getElementById('kpi-most-picked').textContent = topGolfer ? topGolfer + ' (' + topCount + ' picks)' : '\\u2013';
+
+      // Picks table
+      const picksBody = document.getElementById('picks-body');
+      picksBody.innerHTML = '';
+      if (!appState.entries.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.className = 'muted';
+        cell.textContent = 'No entries yet.';
+        row.appendChild(cell);
+        picksBody.appendChild(row);
+      } else {
+        appState.entries
+          .slice()
+          .sort((a, b) => a.entrantName.localeCompare(b.entrantName))
+          .forEach(entry => {
+            const tr = document.createElement('tr');
+            const tdName = document.createElement('td');
+            tdName.textContent = entry.entrantName;
+            const tdTeam = document.createElement('td');
+            const pillList = document.createElement('div');
+            pillList.className = 'pill-list';
+            entry.golfers.forEach(g => {
+              const pill = document.createElement('span');
+              pill.className = 'pill';
+              pill.textContent = g.name;
+              pillList.appendChild(pill);
+            });
+            tdTeam.appendChild(pillList);
+            const tdOdds = document.createElement('td');
+            tdOdds.className = 'numeric';
+            tdOdds.textContent = entry.combinedOdds ? entry.combinedOdds + '/1' : '\\u2013';
+            tr.appendChild(tdName);
+            tr.appendChild(tdTeam);
+            tr.appendChild(tdOdds);
+            picksBody.appendChild(tr);
+          });
+      }
+
+      // Leaders by round (simple summary returned by backend if available)
+      const roundBody = document.getElementById('round-leaders-body');
+      roundBody.innerHTML = '';
+      const rounds = (appState.meta.roundLeaders && Array.isArray(appState.meta.roundLeaders)) ? appState.meta.roundLeaders : [];
+      if (!rounds.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.className = 'muted';
+        cell.textContent = 'Round leaders will appear once the tournament is underway and the organiser has refreshed scores.';
+        row.appendChild(cell);
+        roundBody.appendChild(row);
+      } else {
+        rounds.forEach(r => {
+          const tr = document.createElement('tr');
+          const tdRound = document.createElement('td');
+          tdRound.textContent = 'Round ' + r.round;
+          const tdLeader = document.createElement('td');
+          tdLeader.textContent = r.leaderName || '\\u2013';
+          const tdScore = document.createElement('td');
+          tdScore.className = 'numeric';
+          tdScore.textContent = typeof r.teamScore === 'number' ? formatToPar(r.teamScore) : '\\u2013';
+          tr.appendChild(tdRound);
+          tr.appendChild(tdLeader);
+          tr.appendChild(tdScore);
+          roundBody.appendChild(tr);
+        });
+      }
+    }
+
+    async function loadField() {
+      try {
+        const data = await apiGet({ action: 'field' });
+        if (!data || !Array.isArray(data.players)) return;
+        appState.field = data.players.map(p => ({ name: p.name, odds: Number(p.odds) }));
+        renderFieldOptions();
+        updateCombinedOddsDisplay();
+      } catch (err) {
+        console.error('Failed to load field', err);
+      }
+    }
+
+    async function loadLeaderboardAndDashboard() {
+      try {
+        const data = await apiGet({ action: 'leaderboard' });
+        if (!data || !Array.isArray(data.entries)) return;
+        appState.entries = data.entries.map(e => ({
+          entrantName: e.entrantName,
+          golfers: (e.golfers || []).map(g => ({ name: g.name, scoreToPar: Number(g.scoreToPar) })),
+          combinedScoreToPar: Number(e.combinedScoreToPar),
+          combinedOdds: Number(e.combinedOdds || 0)
+        }));
+        appState.meta.lastUpdated = data.lastUpdated || null;
+        appState.meta.currentRound = data.currentRound || null;
+        appState.meta.roundLeaders = data.roundLeaders || [];
+        renderLeaderboard();
+        renderDashboard();
+      } catch (err) {
+        console.error('Failed to load leaderboard', err);
+      }
+    }
+
+    // ---- Admin actions ----
+    document.getElementById('btn-refresh-scores').addEventListener('click', async () => {
+      const statusEl = document.getElementById('admin-status');
+      statusEl.textContent = '';
+      statusEl.removeAttribute('data-variant');
+      const key = document.getElementById('admin-key').value.trim();
+      if (!key) {
+        statusEl.textContent = 'Enter the admin key configured in the backend script.';
+        statusEl.setAttribute('data-variant', 'error');
+        return;
+      }
+      try {
+        statusEl.textContent = 'Refreshing scores from RawLeaderboard sheet&hellip;';
+        const res = await apiPost({ action: 'refreshScores', adminKey: key }, {});
+        if (!res || !res.ok) {
+          statusEl.textContent = (res && res.message) || 'Refresh failed. Check the admin key and that the RawLeaderboard sheet is populated.';
+          statusEl.setAttribute('data-variant', 'error');
+          return;
+        }
+        statusEl.textContent = 'Scores refreshed. Leaderboard and dashboard updated.';
+        statusEl.setAttribute('data-variant', 'success');
+        await loadLeaderboardAndDashboard();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Unexpected error while refreshing scores.';
+        statusEl.setAttribute('data-variant', 'error');
+      }
+    });
+
+    document.getElementById('btn-reload-all').addEventListener('click', async () => {
+      const statusEl = document.getElementById('admin-status');
+      statusEl.textContent = 'Reloading field and leaderboard data&hellip;';
+      statusEl.removeAttribute('data-variant');
+      try {
+        await Promise.all([loadField(), loadLeaderboardAndDashboard()]);
+        statusEl.textContent = 'Reload complete.';
+        statusEl.setAttribute('data-variant', 'success');
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Reload failed. See console for details.';
+        statusEl.setAttribute('data-variant', 'error');
+      }
+    });
+
+    // ---- Initial load ----
+    (async function init(){
+      await Promise.all([loadField(), loadLeaderboardAndDashboard()]);
+    })();
+  </script>
+</body>
+</html>
