@@ -302,7 +302,72 @@
       box-shadow: var(--shadow-sm);
       transform: translateY(-1px);
     }
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
 
+    .hof-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .hof-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      justify-content: space-between;
+    }
+    .hof-year {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+    }
+    .hof-winner {
+      font-weight: 600;
+      font-size: var(--text-sm);
+    }
+
+    .hof-photo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hof-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: var(--text-xs);
+    }
+    .hof-row {
+      display: grid;
+      grid-template-columns: minmax(0, 80px) minmax(0, 1fr);
+      gap: 0.35rem;
+    }
+    .hof-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+    .hof-value {
+      font-size: var(--text-xs);
+    }
+    .hof-winnings {
+      font-weight: 600;
+      color: var(--color-success);
+    }
     .helper-text {
       font-size: var(--text-xs);
       color: var(--color-text-muted);
@@ -453,12 +518,13 @@
       <button class="theme-toggle-btn" type="button" data-theme-toggle aria-label="Toggle dark mode"></button>
     </header>
 
-    <nav class="nav-tabs" aria-label="Main navigation">
-      <button class="nav-tab" type="button" data-page="entry" data-active="true">Enter team</button>
-      <button class="nav-tab" type="button" data-page="leaderboard">Leaderboard</button>
-      <button class="nav-tab" type="button" data-page="dashboard">Dashboard</button>
-      <button class="nav-tab" type="button" data-page="admin">Admin</button>
-    </nav>
+<nav class="nav-tabs" aria-label="Main navigation">
+  <button class="nav-tab" type="button" data-page="entry" data-active="true">Enter team</button>
+  <button class="nav-tab" type="button" data-page="leaderboard">Leaderboard</button>
+  <button class="nav-tab" type="button" data-page="dashboard">Dashboard</button>
+  <button class="nav-tab" type="button" data-page="hof">Hall of Fame</button>
+  <button class="nav-tab" type="button" data-page="admin">Admin</button>
+</nav>
 
     <main>
       <!-- Entry page -->
@@ -628,6 +694,199 @@
         </div>
       </section>
 
+      <!-- Hall of Fame page -->
+      <section id="page-hof" class="page" aria-labelledby="hof-heading">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 id="hof-heading" class="card-title">Hall of Fame</h2>
+              <p class="helper-text">
+                Previous champions of the Masters friends pool, their winning teams, and total winnings.
+              </p>
+            </div>
+          </div>
+
+          <div class="hof-grid">
+            <!-- 2019 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2019</div>
+                <div class="hof-winner">Neil Jones</div>
+                <!-- Optional image; see section 3 below
+                <img class="hof-photo" src="assets/hof/2019-neil-jones.jpg" alt="Neil Jones – 2019 champion">
+                -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Tiger Woods</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Bubba Watson (28/1), Matt Kuchar (33/1), Si Woo Kim (90/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€50</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2020 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2020</div>
+                <div class="hof-winner">Eoghan O’Brien</div>
+                <!-- <img class="hof-photo" src="assets/hof/2020-eoghan-obrien.jpg" alt="Eoghan O’Brien – 2020 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Dustin Johnson</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Dustin Johnson (8/1), Bryson DeChambeau (7/1), Kevin Na (150/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€120</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2021 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2021</div>
+                <div class="hof-winner">Cathal Murphy</div>
+                <!-- <img class="hof-photo" src="assets/hof/2021-cathal-murphy.jpg" alt="Cathal Murphy – 2021 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Hideki Matsuyama</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Jordan Spieth (10/1), Justin Thomas (10/1), Kevin Na (175/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€250</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2022 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2022</div>
+                <div class="hof-winner">Evan Carroll</div>
+                <!-- <img class="hof-photo" src="assets/hof/2022-evan-carroll.jpg" alt="Evan Carroll – 2022 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Scottie Scheffler</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Justin Thomas (12/1), Cameron Smith (14/1), Cameron Champ (125/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€270</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2023 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2023</div>
+                <div class="hof-winner">Podge O’Donohue</div>
+                <!-- <img class="hof-photo" src="assets/hof/2023-podge-odonohue.jpg" alt="Podge O’Donohue – 2023 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Jon Rahm</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Scottie Scheffler (8/1), Collin Morikawa (22/1), Power (125/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€200</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2024 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2024</div>
+                <div class="hof-winner">Conor Purcell</div>
+                <!-- <img class="hof-photo" src="assets/hof/2024-conor-purcell.jpg" alt="Conor Purcell – 2024 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Scottie Scheffler</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Scottie Scheffler (4/1), Collin Morikawa (45/1), Rickie Fowler (110/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€270</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- 2025 -->
+            <article class="hof-card">
+              <header class="hof-header">
+                <div class="hof-year">2025</div>
+                <div class="hof-winner">Eoghan O'Brien</div>
+                <!-- <img class="hof-photo" src="assets/hof/2025-eoghan-obrien.jpg" alt="Eoghan O'Brien – 2025 champion"> -->
+              </header>
+              <div class="hof-body">
+                <div class="hof-row">
+                  <span class="hof-label">Winning golfer</span>
+                  <span class="hof-value">Rory McIlroy</span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Team</span>
+                  <span class="hof-value">
+                    Scottie Scheffler (5/1), Rory McIlroy (7/1), Harris English (150/1)
+                  </span>
+                </div>
+                <div class="hof-row">
+                  <span class="hof-label">Winnings</span>
+                  <span class="hof-value hof-winnings">€310</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      
       <!-- Admin page -->
       <section id="page-admin" class="page" aria-labelledby="admin-heading">
         <div class="card">
