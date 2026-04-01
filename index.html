@@ -746,17 +746,28 @@
     }
 
     async function apiPost(params, body) {
-      const url = new URL(API_BASE_URL);
-      Object.entries(params || {}).forEach(([k,v]) => url.searchParams.append(k, v));
-      const res = await fetch(url.toString(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body || {})
-      });
-      if (!res.ok) throw new Error('Request failed: ' + res.status);
-      return res.json();
-    }
+  const url = new URL(API_BASE_URL);
 
+  // existing query params, e.g. { action: 'submit' }
+  Object.entries(params || {}).forEach(([k, v]) => {
+    url.searchParams.append(k, v);
+  });
+
+  // encode body into query string too
+  Object.entries(body || {}).forEach(([k, v]) => {
+    if (Array.isArray(v)) {
+      v.forEach(val => url.searchParams.append(k, val));
+    } else if (v !== undefined && v !== null) {
+      url.searchParams.append(k, v);
+    }
+  });
+
+  const res = await fetch(url.toString(), {
+    method: 'GET'
+  });
+  if (!res.ok) throw new Error('Request failed: ' + res.status);
+  return res.json();
+}
     // ---- Entry form + field loading ----
     const pickSelects = [
       document.getElementById('pick-1'),
