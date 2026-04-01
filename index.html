@@ -961,7 +961,8 @@
     function renderDashboard() {
       const entrantsCount = appState.entries.length;
       document.getElementById('kpi-entrants').textContent = entrantsCount ? String(entrantsCount) : '\\u2013';
-      document.getElementById('kpi-pot').textContent = entrantsCount ? '\\u20ac' + (entrantsCount * ENTRY_FEE_EUR).toString() : '\\u2013';
+      document.getElementById('kpi-pot').textContent =
+  entrantsCount ? '€' + (entrantsCount * ENTRY_FEE_EUR).toString() : '–';
 
       // Most-picked golfer
       const counts = new Map();
