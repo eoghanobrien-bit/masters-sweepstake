@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -767,36 +767,23 @@
             </div>
 
             <!-- Discrete organiser tools (moved from Admin tab) -->
-            <details class="stack">
-              <summary class="helper-text" style="cursor:pointer;">Organiser tools (hidden from entrants)</summary>
-              <div class="admin-grid">
-                <div class="field-group">
-                  <label for="admin-key">Admin key</label>
-                  <input id="admin-key" type="password" autocomplete="off" placeholder="Enter admin key" />
-                  <p class="helper-text">Must match the key configured in the Google Apps Script backend.</p>
-                </div>
+<details class="stack">
+  <summary class="helper-text" style="cursor:pointer;">Organiser tools</summary>
+  <div class="admin-grid">
+    <div class="field-group">
+      <label for="admin-key">Admin key</label>
+      <input id="admin-key" type="password" autocomplete="off" placeholder="Enter admin key" />
+    </div>
 
-                <div class="stack">
-                  <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
-                    <button type="button" class="btn-secondary" id="btn-refresh-scores">Refresh scores from sheet</button>
-                    <button type="button" class="btn-secondary" id="btn-reload-all">Reload data in app</button>
-                  </div>
-                  <p id="admin-status" class="status-message" aria-live="polite"></p>
-                </div>
-
-                <div class="stack">
-                  <p class="helper-text">
-                    Setup notes:
-                  </p>
-                  <ol class="helper-text" style="padding-left:1.2rem;">
-                    <li>Create a Google Sheet with tabs <span class="code-inline">Field</span>, <span class="code-inline">Entries</span>, <span class="code-inline">Scores</span>, <span class="code-inline">RawLeaderboard</span>, and <span class="code-inline">Meta</span>.</li>
-                    <li>Paste the official Masters field and fractional odds snapshot from SkyBet into <span class="code-inline">Field</span> (columns: Golfer name, Odds numerator).</li>
-                    <li>Add the Google Apps Script backend to the Sheet, deploy as a web app, and paste the deployment URL into the <span class="code-inline">API_BASE_URL</span> constant in this file.</li>
-                    <li>During the tournament, paste the ESPN Masters leaderboard table into <span class="code-inline">RawLeaderboard</span> and click <span class="code-inline">Refresh scores from sheet</span>.</li>
-                  </ol>
-                </div>
-              </div>
-            </details>
+    <div class="stack">
+      <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+        <button type="button" class="btn-secondary" id="btn-refresh-scores">Refresh scores from sheet</button>
+        <button type="button" class="btn-secondary" id="btn-reload-all">Reload data in app</button>
+      </div>
+      <p id="admin-status" class="status-message" aria-live="polite"></p>
+    </div>
+  </div>
+</details>
           </div>
         </div>
       </section>
@@ -1055,7 +1042,8 @@
       const btn = document.querySelector('[data-theme-toggle]');
       if (!btn) return;
       const root = document.documentElement;
-      let current = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      let current = 'dark';
+root.setAttribute('data-theme', current);
 
       function renderIcon () {
         if (current === 'dark') {
@@ -1442,9 +1430,14 @@
       const counts = computePickCounts();
 
       appState.field
-        .slice()
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .forEach(p => {
+  .slice()
+  .sort((a, b) => {
+    const ao = Number(a.odds) || 0;
+    const bo = Number(b.odds) || 0;
+    if (ao === bo) return a.name.localeCompare(b.name);
+    return ao - bo; // lower odds (shorter price) first
+  })
+  .forEach(p => {
           const tr = document.createElement('tr');
           const tdName = document.createElement('td');
           tdName.textContent = p.name;
