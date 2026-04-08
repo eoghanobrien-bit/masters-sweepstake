@@ -1545,6 +1545,16 @@ root.setAttribute('data-theme', current);
     (async function init () {
       await Promise.all([loadField(), loadLeaderboardAndDashboard()]);
     })();
+    
+    // ---- Auto refresh from backend every 60 seconds ----
+    setInterval(async () => {
+      try {
+        await loadLeaderboardAndDashboard();
+        await loadField();
+      } catch (err) {
+        console.error('Auto-refresh failed:', err);
+      }
+    }, 60000);
   </script>
 </body>
 </html>
